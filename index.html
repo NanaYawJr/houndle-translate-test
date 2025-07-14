@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Simple Google Translate</title>
-</head>
-<body>
-  <h1>🌐 Translate This Page</h1>
-  
-  <!-- This is the widget -->
-  <div id="google_translate_element"></div>
-
-  <p>This is a sample paragraph to translate. Choose a language above to see it change.</p>
-
-  <!-- Google Translate script -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Custom Language Switcher</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    select {
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+  </style>
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({
@@ -22,6 +26,41 @@
       }, 'google_translate_element');
     }
   </script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+  <h1>🌍 Custom Language Switcher</h1>
+  <p>This is a test page for using Google Translate with a custom dropdown.</p>
+
+  <label for="lang">Select Language: </label>
+  <select id="lang">
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+    <option value="es">Español</option>
+    <option value="de">Deutsch</option>
+    <option value="zh-CN">中文</option>
+  </select>
+
+  <div id="google_translate_element" style="display: none;"></div>
+
+  <script>
+    document.getElementById("lang").addEventListener("change", function () {
+      var value = this.value;
+      var iframe = document.querySelector("iframe.goog-te-menu-frame");
+
+      if (iframe) {
+        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        var langSpans = innerDoc.querySelectorAll(".goog-te-menu2-item span.text");
+
+        langSpans.forEach(function (span) {
+          if (span.innerHTML.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+            span.click();
+          }
+        });
+      } else {
+        alert("Google Translate iframe not loaded yet. Please wait a moment and try again.");
+      }
+    });
+  </script>
 </body>
 </html>
