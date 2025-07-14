@@ -5,17 +5,17 @@
   <title>Houndle Translate Test</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Tailwind for styling (optional) -->
+  <!-- Tailwind for styling -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Hide Google Translate banner and styling -->
+  <!-- Hide Google Translate banner -->
   <style>
     .goog-te-banner-frame.skiptranslate {
       display: none !important;
     }
 
     body {
-      top: 0px !important;
+      top: 0 !important;
     }
 
     .goog-tooltip, .goog-tooltip:hover, .goog-text-highlight {
@@ -29,7 +29,7 @@
     }
   </style>
 
-  <!-- Google Translate script -->
+  <!-- Google Translate -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({
@@ -44,10 +44,8 @@
 
 <body class="p-8 font-sans text-gray-900">
 
-  <!-- Hidden Google Translate container -->
   <div id="google_translate_element"></div>
 
-  <!-- Custom language switcher -->
   <h1 class="text-3xl font-bold mb-4">🌍 Custom Language Switcher</h1>
   <p class="mb-6">This is a test page for using Google Translate with a custom dropdown.</p>
 
@@ -60,24 +58,36 @@
     <option value="zh-CN">中文</option>
   </select>
 
+  <!-- Custom translation script -->
   <script>
-    document.getElementById('languageSwitcher').addEventListener('change', function () {
-      const lang = this.value;
-
+    function setLanguage(lang) {
       const interval = setInterval(() => {
         const iframe = document.querySelector('iframe.goog-te-menu-frame');
         if (!iframe) return;
 
         const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        const langButtons = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
+        const items = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
 
-        langButtons.forEach(span => {
-          if (span.innerText.toLowerCase().includes(lang.toLowerCase())) {
-            span.click();
+        items.forEach(el => {
+          if (el.innerText.toLowerCase().includes(lang.toLowerCase())) {
+            el.click();
             clearInterval(interval);
           }
         });
-      }, 300);
+      }, 500);
+    }
+
+    document.getElementById('languageSwitcher').addEventListener('change', function () {
+      const lang = this.value;
+
+      // Open the menu frame before interacting
+      const googFrameButton = document.querySelector('.goog-te-combo');
+      if (googFrameButton) {
+        googFrameButton.value = lang;
+        googFrameButton.dispatchEvent(new Event('change'));
+      } else {
+        setLanguage(lang);
+      }
     });
   </script>
 
