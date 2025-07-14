@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Custom Google Translate Dropdown</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+    select {
+      padding: 0.5rem 1rem;
+      font-size: 16px;
+    }
+  </style>
+  <!-- Google Translate script -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+
+<body>
+  <h1>🌍 Custom Language Switcher</h1>
+  <p>This is a test page for using Google Translate with a custom dropdown.</p>
+
+  <div id="google_translate_element" style="display: none;"></div>
+
+  <label for="custom-lang">Select Language:</label>
+  <select id="custom-lang">
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+    <option value="es">Español</option>
+    <option value="de">Deutsch</option>
+    <option value="zh-CN">中文</option>
+  </select>
+
+  <script>
+    const languageMap = {
+      'en': 'english',
+      'fr': 'french',
+      'es': 'spanish',
+      'de': 'german',
+      'zh-CN': 'chinese (simplified)'
+    };
+
+    document.getElementById('custom-lang').addEventListener('change', function () {
+      const selectedLang = this.value;
+      const translatedText = languageMap[selectedLang];
+
+      const interval = setInterval(() => {
+        const iframe = document.querySelector('iframe.goog-te-menu-frame');
+        if (!iframe) return;
+
+        const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const items = innerDoc.querySelectorAll('.goog-te-menu2-item span.text');
+
+        items.forEach(span => {
+          if (span.innerText.toLowerCase().includes(translatedText)) {
+            span.click();
+            clearInterval(interval);
+          }
+        });
+      }, 500);
+    });
+  </script>
+</body>
+</html>
